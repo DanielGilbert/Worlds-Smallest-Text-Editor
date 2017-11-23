@@ -6,6 +6,7 @@ import ctypes
 import os
 import shutil
 import subprocess
+import sys
 import urllib.request
 import zipfile
 
@@ -51,6 +52,10 @@ def fasm_assemble(filename):
     os.chdir(cwd)
 
 def main():
+    if len(sys.argv) == 2 and sys.argv[1] == "run":
+        subprocess.call([r"bin\wste.exe"])
+        return
+
     if os.path.isfile(r"bin\wste.exe"):
         os.remove(r"bin\wste.exe")
 
