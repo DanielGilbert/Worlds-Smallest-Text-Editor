@@ -5,6 +5,74 @@ include 'win32w.inc'
 
 section '.text' code readable writeable executable
 
+main:
+    push NULL
+    call [GetModuleHandle]
+    mov [wcx.hInstance], eax
+    push wcx
+    call [RegisterClassEx]
+    push NULL
+    push [wcx.hInstance]
+    push NULL
+    push HWND_DESKTOP
+    push 480
+    push 640
+    push CW_USEDEFAULT
+    push CW_USEDEFAULT
+    push WS_OVERLAPPEDWINDOW + WS_VISIBLE
+    push window_title
+    push wste_class
+    push WS_EX_LEFT
+    call [CreateWindowEx]
+    mov [hwnd_main], eax
+    call create_textbox
+message_loop:
+    push 0
+    push 0
+    push NULL
+    push msg
+    call [GetMessage]
+    test eax, eax
+    jz .end
+    cmp [msg.message], WM_KEYDOWN
+    jne .neq_wm_keydown
+    push VK_CONTROL
+    call [GetKeyState]
+    and ax, 10000000b
+    test ax, ax
+    jz .ctrl_not_pressed
+    cmp [msg.wParam], 0x4f   ; O
+    jne .not_o_key
+    call open_file
+    jmp message_loop
+.not_o_key:
+    cmp [msg.wParam], 0x53   ; S
+    jne .not_s_key
+    push VK_SHIFT
+    call [GetKeyState]
+    and ax, 10000000b
+    test ax, ax
+    jnz .shift_pressed
+    cmp byte [filename], 0
+    jz .must_save_as
+    call write_file
+    jmp message_loop
+.must_save_as:
+.shift_pressed:
+    call save_file
+    jmp message_loop
+.not_s_key:
+.ctrl_not_pressed:
+.neq_wm_keydown:
+    push msg
+    call [TranslateMessage]
+    push msg
+    call [DispatchMessage]
+    jmp message_loop
+.end:
+    push 0
+    call [ExitProcess]
+
 read_file:
     pop ebp
     pop edx
@@ -212,74 +280,6 @@ window_proc:
     call [DefWindowProc]  ; result in eax so we can just ret here
 .end:
     ret
-
-main:
-    push NULL
-    call [GetModuleHandle]
-    mov [wcx.hInstance], eax
-    push wcx
-    call [RegisterClassEx]
-    push NULL
-    push [wcx.hInstance]
-    push NULL
-    push HWND_DESKTOP
-    push 480
-    push 640
-    push CW_USEDEFAULT
-    push CW_USEDEFAULT
-    push WS_OVERLAPPEDWINDOW + WS_VISIBLE
-    push window_title
-    push wste_class
-    push WS_EX_LEFT
-    call [CreateWindowEx]
-    mov [hwnd_main], eax
-    call create_textbox
-message_loop:
-    push 0
-    push 0
-    push NULL
-    push msg
-    call [GetMessage]
-    test eax, eax
-    jz .end
-    cmp [msg.message], WM_KEYDOWN
-    jne .neq_wm_keydown
-    push VK_CONTROL
-    call [GetKeyState]
-    and ax, 10000000b
-    test ax, ax
-    jz .ctrl_not_pressed
-    cmp [msg.wParam], 0x4f   ; O
-    jne .not_o_key
-    call open_file
-    jmp message_loop
-.not_o_key:
-    cmp [msg.wParam], 0x53   ; S
-    jne .not_s_key
-    push VK_SHIFT
-    call [GetKeyState]
-    and ax, 10000000b
-    test ax, ax
-    jnz .shift_pressed
-    cmp byte [filename], 0
-    jz .must_save_as
-    call write_file
-    jmp message_loop
-.must_save_as:
-.shift_pressed:
-    call save_file
-    jmp message_loop
-.not_s_key:
-.ctrl_not_pressed:
-.neq_wm_keydown:
-    push msg
-    call [TranslateMessage]
-    push msg
-    call [DispatchMessage]
-    jmp message_loop
-.end:
-    push 0
-    call [ExitProcess]
 
 file_data_ptr dd 0
 heap_handle   dd 0
