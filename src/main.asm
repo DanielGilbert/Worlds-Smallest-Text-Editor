@@ -34,7 +34,8 @@ section ".imports" import data readable writeable
             User32   , "User32.dll"
 
     import Comdlg32, \
-        GetOpenFileName, "GetOpenFileNameA"
+        GetOpenFileName, "GetOpenFileNameA", \
+        GetSaveFileName, "GetSaveFileNameA"
 
     import Gdi32, \
         CreateFont, "CreateFontA"

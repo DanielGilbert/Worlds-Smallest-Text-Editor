@@ -28,16 +28,9 @@ io.load_file:
 .size_ok:
     mov [io.file_size], eax
     call [GetProcessHeap]
+    mov [io.heap_handle], eax
     push [io.file_size]
     cmp [io.file_data_ptr], 0
-    jne .no_dealloc
-    push eax
-    push [io.file_data_ptr]
-    push 0
-    push eax
-    call [HeapFree]
-    pop eax
-.no_dealloc:
     push HEAP_ZERO_MEMORY
     push eax
     call [HeapAlloc]
@@ -62,6 +55,10 @@ io.load_file:
     call ui.set_textbox_text
     push [io.file_handle]
     call [CloseHandle]
+    push [io.file_data_ptr]
+    push 0
+    push [io.heap_handle]
+    call [HeapFree]
     ret
 .open_fail_msg db "Could not open file.", 0
 .size_fail_msg db "Could not get file size.", 0

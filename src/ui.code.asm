@@ -17,11 +17,16 @@ ui.save_file:
     mov eax, [ui.hwnd_main]
     mov [ui.ofn.hwndOwner], eax
     push ui.ofn
-    call [GetOpenFileName]
+    call [GetSaveFileName]
     test eax, eax
     jz .user_cancelled
+
+    ;; save here
+
+
     push ui.filename
-    call io.load_file
+    push [ui.hwnd_main]
+    call [SetWindowText]
 .user_cancelled:
     ret
 
