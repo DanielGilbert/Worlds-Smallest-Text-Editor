@@ -35,7 +35,7 @@ ui.create_textbox:
     push 0
     push 0
     push 0
-    push 16
+    push 14
     call [CreateFont]
     push TRUE
     push eax
