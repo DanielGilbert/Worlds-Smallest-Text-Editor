@@ -4,6 +4,10 @@
 
 ...
 
+## How small is it?
+
+Using the included make-script (which uses [fasm](https://flatassembler.net/) for assembly and linking), the executable is 2560 bytes.
+
 ## Building from source code
 
 ### Prerequisites
