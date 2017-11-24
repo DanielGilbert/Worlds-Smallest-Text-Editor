@@ -3,8 +3,11 @@ ui.browse_for_file:
     mov [ui.ofn.hwndOwner], eax
     push ui.ofn
     call [GetOpenFileName]
+    test eax, eax
+    jz .user_cancelled
     push ui.filename
     call io.load_file
+.user_cancelled:
     ret
 
 ui.create_textbox:
