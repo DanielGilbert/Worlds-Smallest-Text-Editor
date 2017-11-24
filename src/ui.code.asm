@@ -112,6 +112,17 @@ ui.main:
 .not_o_key:
     cmp [ui.msg.wParam], 0x53   ; S
     jne .not_s_key
+    push VK_SHIFT
+    call [GetKeyState]
+    and ax, 10000000b
+    test ax, ax
+    jnz .shift_pressed
+    cmp byte [ui.filename], 0
+    jz .must_save_as
+    call io.save_file
+    jmp ui.main
+.must_save_as:
+.shift_pressed:
     call ui.save_file
     jmp ui.main
 .not_s_key:
