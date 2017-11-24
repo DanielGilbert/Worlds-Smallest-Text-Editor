@@ -1,83 +1,9 @@
 format PE GUI 4.0
-entry WinMain
+entry main
 
-include "win32w.inc"
+include 'win32w.inc'
 
-;;;-------------------------------------
-section ".data" data readable writeable
-;;;-------------------------------------
-
-io.file_data_ptr dd 0
-io.heap_handle   dd 0
-ui.edit_class    db "EDIT", 0
-ui.wste_class    db "WSTE_Main", 0
-ui.textbox_font  db "Consolas", 0
-ui.window_title  db "The World's Smallest Text Editor!", 0
-ui.file_filters  db "Any file (*.*)", 0, "*.*", 0, 0
-
-ui.wcx:
-    .cbSize        dd 48
-    .style         dd 0
-    .lpfnWndProc   dd ui.window_proc
-    .cbClsExtra    dd 0
-    .cbWndExtra    dd 0
-    .hInstance     dd 0
-    .hIcon         dd 0
-    .hCursor       dd 0
-    .hbrBackground dd COLOR_WINDOW+1
-    .lpszMenuName  dd 0
-    .lpszClassName dd ui.wste_class
-    .hIconSm       dd 0
-
-ui.ofn:
-    .lStructSize       dd 88
-    .hwndOwner         dd NULL
-    .hInstance         dd NULL
-    .lpstrFilter       dd ui.file_filters
-    .lpstrCustomFilter dd NULL
-    .nMaxCustFilter    dd 0
-    .nFilterIndex      dd 1
-    .lpstrFile         dd ui.filename
-    .nMaxFile          dd MAX_PATH
-    .lpstrFileTitle    dd NULL
-    .nMaxFileTitle     dd 0
-    .lpstrInitialDir   dd NULL
-    .lpstrTitle        dd NULL
-    .Flags             dd OFN_HIDEREADONLY
-    .nFileOffset       dw 0
-    .nFileExtension    dw 0
-    .lpstrDefExt       dd NULL
-    .lCustData         dd NULL
-    .lpfnHook          dd NULL
-    .lpTemplateName    dd NULL
-    .lpReserved        dd NULL
-    .dwReserved        dd 0
-    .FlagsEx           dd 0
-
-ui.msg:
-    .hwnd    dd ?
-    .message dd ?
-    .wParam  dd ?
-    .lParam  dd ?
-    .time    dd ?
-    .pt      dq ?
-
-ui.rect:
-    .left   dd ?
-    .top    dd ?
-    .right  dd ?
-    .bottom dd ?
-
-io.file_handle     dd ?
-io.file_size       dd ?
-io.num_bytes_read  dd ?
-ui.hwnd_textbox    dd ?
-ui.hwnd_main       dd ?
-ui.filename        rb MAX_PATH
-
-;;;-------------------------------------
-section ".code" code readable executable
-;;;-------------------------------------
+section '.text' code readable writeable executable
 
 io.load_file:
     pop ebp
@@ -93,7 +19,7 @@ io.load_file:
     call [CreateFile]
     cmp eax, INVALID_HANDLE_VALUE
     jne .open_ok
-    push .open_fail_msg
+    push open_fail_msg
     call ui.message_box
     ret
 .open_ok:
@@ -126,7 +52,6 @@ io.load_file:
     push [io.heap_handle]
     call [HeapFree]
     ret
-.open_fail_msg db "Could not open file.", 0
 
 io.save_file:
     call [GetProcessHeap]
@@ -287,7 +212,7 @@ ui.window_proc:
 .end:
     ret
 
-WinMain:
+main:
     push NULL
     call [GetModuleHandle]
     mov [ui.wcx.hInstance], eax
@@ -355,48 +280,115 @@ message_loop:
     push 0
     call [ExitProcess]
 
-;;;-------------------------------------
-section ".imports" import data readable writeable
-;;;-------------------------------------
+io.file_data_ptr dd 0
+io.heap_handle   dd 0
+ui.edit_class    db 'EDIT', 0
+ui.wste_class    db 'WSTE_Main', 0
+ui.textbox_font  db 'Consolas', 0
+ui.window_title  db 'The World''s Smallest Text Editor!', 0
+ui.file_filters  db 'Any file (*.*)', 0, '*.*', 0, 0
+open_fail_msg db 'Could not open file.', 0
 
-    library Comdlg32 , "Comdlg32.dll", \
-            Gdi32    , "Gdi32.dll",    \
-            Kernel32 , "Kernel32.dll", \
-            User32   , "User32.dll"
+ui.wcx:
+    .cbSize        dd 48
+    .style         dd 0
+    .lpfnWndProc   dd ui.window_proc
+    .cbClsExtra    dd 0
+    .cbWndExtra    dd 0
+    .hInstance     dd 0
+    .hIcon         dd 0
+    .hCursor       dd 0
+    .hbrBackground dd COLOR_WINDOW+1
+    .lpszMenuName  dd 0
+    .lpszClassName dd ui.wste_class
+    .hIconSm       dd 0
+
+ui.ofn:
+    .lStructSize       dd 88
+    .hwndOwner         dd NULL
+    .hInstance         dd NULL
+    .lpstrFilter       dd ui.file_filters
+    .lpstrCustomFilter dd NULL
+    .nMaxCustFilter    dd 0
+    .nFilterIndex      dd 1
+    .lpstrFile         dd ui.filename
+    .nMaxFile          dd MAX_PATH
+    .lpstrFileTitle    dd NULL
+    .nMaxFileTitle     dd 0
+    .lpstrInitialDir   dd NULL
+    .lpstrTitle        dd NULL
+    .Flags             dd OFN_HIDEREADONLY
+    .nFileOffset       dw 0
+    .nFileExtension    dw 0
+    .lpstrDefExt       dd NULL
+    .lCustData         dd NULL
+    .lpfnHook          dd NULL
+    .lpTemplateName    dd NULL
+    .lpReserved        dd NULL
+    .dwReserved        dd 0
+    .FlagsEx           dd 0
+
+ui.msg:
+    .hwnd    dd ?
+    .message dd ?
+    .wParam  dd ?
+    .lParam  dd ?
+    .time    dd ?
+    .pt      dq ?
+
+ui.rect:
+    .left   dd ?
+    .top    dd ?
+    .right  dd ?
+    .bottom dd ?
+
+io.file_handle     dd ?
+io.file_size       dd ?
+io.num_bytes_read  dd ?
+ui.hwnd_textbox    dd ?
+ui.hwnd_main       dd ?
+ui.filename        rb MAX_PATH
+
+section '.idata' import data readable
+
+    library Comdlg32 , 'Comdlg32.dll', \
+            Gdi32    , 'Gdi32.dll',    \
+            Kernel32 , 'Kernel32.dll', \
+            User32   , 'User32.dll'
 
     import Comdlg32, \
-        GetOpenFileName, "GetOpenFileNameA", \
-        GetSaveFileName, "GetSaveFileNameA"
+        GetOpenFileName, 'GetOpenFileNameA', \
+        GetSaveFileName, 'GetSaveFileNameA'
 
     import Gdi32, \
-        CreateFont, "CreateFontA"
+        CreateFont, 'CreateFontA'
 
     import Kernel32,\
-        CloseHandle     , "CloseHandle",      \
-        CreateFile      , "CreateFileA",      \
-        ExitProcess     , "ExitProcess",      \
-        GetFileSize     , "GetFileSize",      \
-        GetModuleHandle , "GetModuleHandleA", \
-        GetProcessHeap  , "GetProcessHeap",   \
-        HeapAlloc       , "HeapAlloc",        \
-        HeapFree        , "HeapFree",         \
-        ReadFile        , "ReadFile",         \
-        WriteFile       , "WriteFile"
+        CloseHandle     , 'CloseHandle',      \
+        CreateFile      , 'CreateFileA',      \
+        ExitProcess     , 'ExitProcess',      \
+        GetFileSize     , 'GetFileSize',      \
+        GetModuleHandle , 'GetModuleHandleA', \
+        GetProcessHeap  , 'GetProcessHeap',   \
+        HeapAlloc       , 'HeapAlloc',        \
+        HeapFree        , 'HeapFree',         \
+        ReadFile        , 'ReadFile',         \
+        WriteFile       , 'WriteFile'
 
     import User32,                                    \
-        CreateWindowEx      , "CreateWindowExA",      \
-        DefWindowProc       , "DefWindowProcA",       \
-        DispatchMessage     , "DispatchMessageA",     \
-        GetClientRect       , "GetClientRect",        \
-        GetKeyState         , "GetKeyState",          \
-        GetMessage          , "GetMessageA",          \
-        GetWindowText       , "GetWindowTextA",       \
-        GetWindowTextLength , "GetWindowTextLengthA", \
-        MessageBox          , "MessageBoxA",          \
-        MoveWindow          , "MoveWindow",           \
-        PostQuitMessage     , "PostQuitMessage",      \
-        RegisterClassEx     , "RegisterClassExA",     \
-        SendMessage         , "SendMessageA",         \
-        SetFocus            , "SetFocus",             \
-        SetWindowText       , "SetWindowTextA",       \
-        TranslateMessage    , "TranslateMessage"
+        CreateWindowEx      , 'CreateWindowExA',      \
+        DefWindowProc       , 'DefWindowProcA',       \
+        DispatchMessage     , 'DispatchMessageA',     \
+        GetClientRect       , 'GetClientRect',        \
+        GetKeyState         , 'GetKeyState',          \
+        GetMessage          , 'GetMessageA',          \
+        GetWindowText       , 'GetWindowTextA',       \
+        GetWindowTextLength , 'GetWindowTextLengthA', \
+        MessageBox          , 'MessageBoxA',          \
+        MoveWindow          , 'MoveWindow',           \
+        PostQuitMessage     , 'PostQuitMessage',      \
+        RegisterClassEx     , 'RegisterClassExA',     \
+        SendMessage         , 'SendMessageA',         \
+        SetFocus            , 'SetFocus',             \
+        SetWindowText       , 'SetWindowTextA',       \
+        TranslateMessage    , 'TranslateMessage'
