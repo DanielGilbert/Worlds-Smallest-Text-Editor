@@ -22,3 +22,6 @@ Using the included make-script (which uses [fasm](https://flatassembler.net/) fo
 2. Run the make-script: `python make.py`  
    <sup><i><b>&nbsp;&nbsp;&nbsp;&nbsp;NOTE:</b> The make script will automatically download [fasm](https://flatassembler.net/) to the repository directory.</i></sup>
 3. Run the executable normally or start it with the make-script: `python make.py run`
+
+To clone, build and run the program, enter the following into your terminal:
+`git clone https://github.com/philiparvidsson/Worlds-Smallest-Text-Editor && cd Worlds-Smallest-Text-Editor && python make.py && python make.py run`
