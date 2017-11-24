@@ -38,8 +38,8 @@ message_loop:
     jne .neq_wm_keydown
     push VK_CONTROL
     call [GetKeyState]
-    and ax, 10000000b
-    test ax, ax
+    and ah, 1000b
+    test ah, ah
     jz .ctrl_not_pressed
     cmp [msg.wParam], 0x4f   ; O
     jne .not_o_key
@@ -50,8 +50,8 @@ message_loop:
     jne .not_s_key
     push VK_SHIFT
     call [GetKeyState]
-    and ax, 10000000b
-    test ax, ax
+    and ah, 1000b
+    test ah, ah
     jnz .shift_pressed
     cmp byte [filename], 0
     jz .must_save_as
