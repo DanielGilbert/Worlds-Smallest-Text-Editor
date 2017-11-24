@@ -7,6 +7,9 @@ ui.open_file:
     jz .user_cancelled
     push ui.filename
     call io.load_file
+    push ui.filename
+    push [ui.hwnd_main]
+    call [SetWindowText]
 .user_cancelled:
     ret
 
