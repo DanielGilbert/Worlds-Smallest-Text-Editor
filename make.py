@@ -3,6 +3,7 @@
 #---------------------------------------
 
 import ctypes
+import ntpath
 import os
 import shutil
 import subprocess
@@ -52,6 +53,10 @@ def fasm_assemble(filename):
     os.chdir(cwd)
 
 def main():
+    script_dir, _ = ntpath.split(sys.argv[0])
+
+    os.chdir(script_dir)
+
     if len(sys.argv) == 2 and sys.argv[1] == "run":
         subprocess.call([r"bin\wste.exe"])
         return
