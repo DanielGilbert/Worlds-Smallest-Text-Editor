@@ -10,7 +10,7 @@ The program can load, save and edit textfiles just like [Notepad](https://en.wik
 
 ## How small is it?
 
-Using the included make-script (which uses [fasm](https://flatassembler.net/) for assembly and linking), the executable is **3072 bytes**.
+Using the included make-script (which uses [fasm](https://flatassembler.net/) for assembly and linking), the executable file size is **3072 bytes**.
 
 ## Building and running
 
