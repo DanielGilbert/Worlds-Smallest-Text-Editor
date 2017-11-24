@@ -7,12 +7,14 @@ include "win32w.inc"
 section ".data" data readable writeable
 ;;;-------------------------------------
 
+include "io.data.asm"
 include "ui.data.asm"
 
 ;;;-------------------------------------
 section ".code" code readable executable
 ;;;-------------------------------------
 
+include "io.code.asm"
 include "ui.code.asm"
 
 WinMain:
@@ -38,8 +40,9 @@ section ".imports" import data readable writeable
         CreateFont, "CreateFontA"
 
     import Kernel32,\
+        ExitProcess     , "ExitProcess",      \
         GetModuleHandle , "GetModuleHandleA", \
-        ExitProcess     , "ExitProcess"
+        OpenFile        , "OpenFile"
 
     import User32,                             \
         CreateWindowEx   , "CreateWindowExA",  \
