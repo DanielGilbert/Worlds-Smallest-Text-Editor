@@ -6,7 +6,7 @@
 
     textbox_font_name db "Consolas", 0
 
-    window_title db "World's Smallest Text Editor"
+    window_title db "World's Smallest Text Editor", 0
 
     file_filters db "All Files", 0, "*.*", 0, 0
 
