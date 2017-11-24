@@ -29,7 +29,7 @@ section ".imports" import data readable writeable
 ;;;-------------------------------------
 
     library Comdlg32 , "Comdlg32.dll", \
-            Gdi32    , "Gdi32.dll"   , \
+            Gdi32    , "Gdi32.dll",    \
             Kernel32 , "Kernel32.dll", \
             User32   , "User32.dll"
 
@@ -40,9 +40,14 @@ section ".imports" import data readable writeable
         CreateFont, "CreateFontA"
 
     import Kernel32,\
+        CloseHandle     , "CloseHandle",      \
+        CreateFile      , "CreateFileA",      \
         ExitProcess     , "ExitProcess",      \
+        GetFileSize     , "GetFileSize",      \
         GetModuleHandle , "GetModuleHandleA", \
-        OpenFile        , "OpenFile"
+        GetProcessHeap  , "GetProcessHeap",   \
+        HeapAlloc       , "HeapAlloc",        \
+        ReadFile        , "ReadFile"
 
     import User32,                             \
         CreateWindowEx   , "CreateWindowExA",  \
@@ -55,4 +60,5 @@ section ".imports" import data readable writeable
         PostQuitMessage  , "PostQuitMessage",  \
         RegisterClassEx  , "RegisterClassExA", \
         SendMessage      , "SendMessageA",     \
+        SetWindowText    , "SetWindowTextA",   \
         TranslateMessage , "TranslateMessage"

@@ -3,11 +3,8 @@ ui.browse_for_file:
     mov [ui.ofn.hwndOwner], eax
     push ui.ofn
     call [GetOpenFileName]
-    push MB_OK
     push ui.filename
-    push ui.filename
-    push HWND_DESKTOP
-    call [MessageBox]
+    call io.load_file
     ret
 
 ui.create_textbox:
@@ -69,6 +66,9 @@ ui.init:
     call [CreateWindowEx]
     mov [ui.hwnd_main], eax
     call ui.create_textbox
+
+    call ui.browse_for_file
+
     ret
 
 ui.main:
@@ -87,6 +87,17 @@ ui.main:
 .end:
     ret
 
+ui.message_box:
+    pop ebp
+    pop edx
+    push ebp
+    push MB_OK
+    push edx
+    push edx
+    push HWND_DESKTOP
+    call [MessageBox]
+    ret
+
 ui.resize_textbox:
     push ui.rect
     push [ui.hwnd_main]
@@ -98,6 +109,15 @@ ui.resize_textbox:
     push [ui.rect.left]
     push [ui.hwnd_textbox]
     call [MoveWindow]
+    ret
+
+ui.set_textbox_text:
+    pop ebp
+    pop edx
+    push ebp
+    push edx
+    push [ui.hwnd_textbox]
+    call [SetWindowText]
     ret
 
 ui.window_proc:
