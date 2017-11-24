@@ -6,7 +6,7 @@ ui.wste_class db "WSTE_Main", 0
 
 ui.textbox_font_name db "Consolas", 0
 
-ui.window_title db "World's Smallest Text Editor!", 0
+ui.window_title db "The World's Smallest Text Editor!", 0
 
 ui.file_filters db "All Files", 0, "*.*", 0, 0
 
