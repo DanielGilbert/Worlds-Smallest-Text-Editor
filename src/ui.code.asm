@@ -1,4 +1,16 @@
-ui.browse_for_file:
+ui.open_file:
+    mov eax, [ui.hwnd_main]
+    mov [ui.ofn.hwndOwner], eax
+    push ui.ofn
+    call [GetOpenFileName]
+    test eax, eax
+    jz .user_cancelled
+    push ui.filename
+    call io.load_file
+.user_cancelled:
+    ret
+
+ui.save_file:
     mov eax, [ui.hwnd_main]
     mov [ui.ofn.hwndOwner], eax
     push ui.ofn
@@ -25,6 +37,8 @@ ui.create_textbox:
     push WS_EX_LEFT
     call [CreateWindowEx]
     mov [ui.hwnd_textbox], eax
+    push eax
+    call [SetFocus]
     push ui.textbox_font_name
     push DEFAULT_PITCH
     push PROOF_QUALITY
@@ -69,9 +83,6 @@ ui.init:
     call [CreateWindowEx]
     mov [ui.hwnd_main], eax
     call ui.create_textbox
-
-    call ui.browse_for_file
-
     ret
 
 ui.main:
@@ -82,6 +93,25 @@ ui.main:
     call [GetMessage]
     test eax, eax
     jz .end
+    cmp [ui.msg.message], WM_KEYDOWN
+    jne .neq_wm_keydown
+    push VK_CONTROL
+    call [GetKeyState]
+    and ax, 10000000b
+    test ax, ax
+    jz .ctrl_not_pressed
+    cmp [ui.msg.wParam], 0x4f   ; O
+    jne .not_o_key
+    call ui.open_file
+    jmp ui.main
+.not_o_key:
+    cmp [ui.msg.wParam], 0x53   ; S
+    jne .not_s_key
+    call ui.save_file
+    jmp ui.main
+.not_s_key:
+.ctrl_not_pressed:
+.neq_wm_keydown:
     push ui.msg
     call [TranslateMessage]
     push ui.msg

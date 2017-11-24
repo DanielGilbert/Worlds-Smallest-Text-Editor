@@ -47,6 +47,7 @@ section ".imports" import data readable writeable
         GetModuleHandle , "GetModuleHandleA", \
         GetProcessHeap  , "GetProcessHeap",   \
         HeapAlloc       , "HeapAlloc",        \
+        HeapFree        , "HeapFree",         \
         ReadFile        , "ReadFile"
 
     import User32,                             \
@@ -54,6 +55,7 @@ section ".imports" import data readable writeable
         DefWindowProc    , "DefWindowProcA",   \
         DispatchMessage  , "DispatchMessageA", \
         GetClientRect    , "GetClientRect",    \
+        GetKeyState      , "GetKeyState",      \
         GetMessage       , "GetMessageA",      \
         MessageBox       , "MessageBoxA",      \
         MoveWindow       , "MoveWindow",       \
@@ -61,4 +63,5 @@ section ".imports" import data readable writeable
         RegisterClassEx  , "RegisterClassExA", \
         SendMessage      , "SendMessageA",     \
         SetWindowText    , "SetWindowTextA",   \
+        SetFocus         , "SetFocus",         \
         TranslateMessage , "TranslateMessage"
