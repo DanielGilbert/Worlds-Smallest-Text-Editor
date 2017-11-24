@@ -12,6 +12,16 @@ The program can load, save and edit text files just like [Notepad](https://en.wi
 
 Using the included make-script (which uses [fasm](https://flatassembler.net/) for assembly and linking), the executable file size is **3072 bytes**.
 
+## User instructions
+The editor is intentionally kept very simple, but there are a few keyboard shortcuts that you need to know:
+
+### Keyboard shortcuts
+| Key combination  | Command      |
+| ---------------- | ------------ |
+| Ctrl + L         | Open...      |
+| Ctrl + S         | Save         |
+| Ctrl + Shift + S | Save as...   |
+
 ## Building and running
 
 ### Prerequisites
