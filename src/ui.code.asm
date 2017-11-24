@@ -27,14 +27,14 @@ ui.create_textbox:
     mov [ui.hwnd_textbox], eax
     push ui.textbox_font_name
     push DEFAULT_PITCH
-    push DEFAULT_QUALITY
+    push PROOF_QUALITY
     push CLIP_DEFAULT_PRECIS
     push OUT_DEFAULT_PRECIS
     push ANSI_CHARSET
     push FALSE
     push FALSE
     push FALSE
-    push FW_DONTCARE
+    push FW_NORMAL
     push 0
     push 0
     push 0
