@@ -74,16 +74,13 @@ message_loop:
     call [ExitProcess]
 
 read_file:
-    pop ebp
-    pop edx
-    push ebp
     push NULL
     push FILE_ATTRIBUTE_NORMAL
     push OPEN_EXISTING
     push NULL
     push FILE_SHARE_READ
     push GENERIC_READ
-    push edx
+    push filename
     call [CreateFile]
     cmp eax, INVALID_HANDLE_VALUE
     jne .open_ok
@@ -169,7 +166,6 @@ open_file:
     call [GetOpenFileName]
     test eax, eax
     jz .user_cancelled
-    push filename
     call read_file
     push filename
     push [hwnd_main]
