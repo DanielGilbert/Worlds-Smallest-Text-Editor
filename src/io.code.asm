@@ -30,7 +30,6 @@ io.load_file:
     call [GetProcessHeap]
     mov [io.heap_handle], eax
     push [io.file_size]
-    cmp [io.file_data_ptr], 0
     push HEAP_ZERO_MEMORY
     push eax
     call [HeapAlloc]
@@ -64,3 +63,48 @@ io.load_file:
 .size_fail_msg db "Could not get file size.", 0
 .heap_fail_msg db "Could not allocate memory.", 0
 .read_fail_msg db "Could not read file.", 0
+
+io.save_file:
+    call [GetProcessHeap]
+    mov [io.heap_handle], eax
+    push [ui.hwnd_textbox]
+    call [GetWindowTextLength]
+    inc eax                     ; make room for nullchar
+    mov [io.file_size], eax
+    push [io.file_size]
+    push HEAP_ZERO_MEMORY
+    push [io.heap_handle]
+    call [HeapAlloc]
+    mov [io.file_data_ptr], eax
+    push [io.file_size]
+    push [io.file_data_ptr]
+    push [ui.hwnd_textbox]
+    call [GetWindowText]
+
+    push NULL
+    push FILE_ATTRIBUTE_NORMAL
+    push CREATE_ALWAYS
+    push NULL
+    push 0
+    push GENERIC_WRITE
+    push ui.filename
+    call [CreateFile]
+    mov [io.file_handle], eax
+
+    push NULL
+    push io.num_bytes_read
+    mov eax, [io.file_size]
+    dec eax                     ; dont write nullchar
+    push eax
+    push [io.file_data_ptr]
+    push [io.file_handle]
+    call [WriteFile]
+
+    push [io.file_handle]
+    call [CloseHandle]
+
+    push [io.file_data_ptr]
+    push 0
+    push [io.heap_handle]
+    call [HeapFree]
+    ret

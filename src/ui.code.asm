@@ -20,10 +20,7 @@ ui.save_file:
     call [GetSaveFileName]
     test eax, eax
     jz .user_cancelled
-
-    ;; save here
-
-
+    call io.save_file
     push ui.filename
     push [ui.hwnd_main]
     call [SetWindowText]

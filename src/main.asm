@@ -49,20 +49,23 @@ section ".imports" import data readable writeable
         GetProcessHeap  , "GetProcessHeap",   \
         HeapAlloc       , "HeapAlloc",        \
         HeapFree        , "HeapFree",         \
-        ReadFile        , "ReadFile"
+        ReadFile        , "ReadFile",         \
+        WriteFile       , "WriteFile"
 
-    import User32,                             \
-        CreateWindowEx   , "CreateWindowExA",  \
-        DefWindowProc    , "DefWindowProcA",   \
-        DispatchMessage  , "DispatchMessageA", \
-        GetClientRect    , "GetClientRect",    \
-        GetKeyState      , "GetKeyState",      \
-        GetMessage       , "GetMessageA",      \
-        MessageBox       , "MessageBoxA",      \
-        MoveWindow       , "MoveWindow",       \
-        PostQuitMessage  , "PostQuitMessage",  \
-        RegisterClassEx  , "RegisterClassExA", \
-        SendMessage      , "SendMessageA",     \
-        SetWindowText    , "SetWindowTextA",   \
-        SetFocus         , "SetFocus",         \
-        TranslateMessage , "TranslateMessage"
+    import User32,                                    \
+        CreateWindowEx      , "CreateWindowExA",      \
+        DefWindowProc       , "DefWindowProcA",       \
+        DispatchMessage     , "DispatchMessageA",     \
+        GetClientRect       , "GetClientRect",        \
+        GetKeyState         , "GetKeyState",          \
+        GetMessage          , "GetMessageA",          \
+        GetWindowText       , "GetWindowTextA",       \
+        GetWindowTextLength , "GetWindowTextLengthA", \
+        MessageBox          , "MessageBoxA",          \
+        MoveWindow          , "MoveWindow",           \
+        PostQuitMessage     , "PostQuitMessage",      \
+        RegisterClassEx     , "RegisterClassExA",     \
+        SendMessage         , "SendMessageA",         \
+        SetWindowText       , "SetWindowTextA",       \
+        SetFocus            , "SetFocus",             \
+        TranslateMessage    , "TranslateMessage"
