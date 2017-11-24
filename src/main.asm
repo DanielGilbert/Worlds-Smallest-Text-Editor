@@ -7,17 +7,19 @@ include "win32w.inc"
 section ".data" data readable writeable
 ;;;-------------------------------------
 
+include "io.data.asm"
 include "ui.data.asm"
 
 ;;;-------------------------------------
 section ".code" code readable executable
 ;;;-------------------------------------
 
+include "io.code.asm"
 include "ui.code.asm"
 
 WinMain:
-    call ui_init
-    call ui_main
+    call ui.init
+    call ui.main
 
     push 0
     call [ExitProcess]
@@ -27,7 +29,7 @@ section ".imports" import data readable writeable
 ;;;-------------------------------------
 
     library Comdlg32 , "Comdlg32.dll", \
-            Gdi32    , "Gdi32.dll"   , \
+            Gdi32    , "Gdi32.dll",    \
             Kernel32 , "Kernel32.dll", \
             User32   , "User32.dll"
 
@@ -38,8 +40,14 @@ section ".imports" import data readable writeable
         CreateFont, "CreateFontA"
 
     import Kernel32,\
+        CloseHandle     , "CloseHandle",      \
+        CreateFile      , "CreateFileA",      \
+        ExitProcess     , "ExitProcess",      \
+        GetFileSize     , "GetFileSize",      \
         GetModuleHandle , "GetModuleHandleA", \
-        ExitProcess     , "ExitProcess"
+        GetProcessHeap  , "GetProcessHeap",   \
+        HeapAlloc       , "HeapAlloc",        \
+        ReadFile        , "ReadFile"
 
     import User32,                             \
         CreateWindowEx   , "CreateWindowExA",  \
@@ -52,4 +60,5 @@ section ".imports" import data readable writeable
         PostQuitMessage  , "PostQuitMessage",  \
         RegisterClassEx  , "RegisterClassExA", \
         SendMessage      , "SendMessageA",     \
+        SetWindowText    , "SetWindowTextA",   \
         TranslateMessage , "TranslateMessage"

@@ -1,19 +1,19 @@
-    hwnd_textbox dd ?
-    hwnd_main    dd ?
+ui.hwnd_textbox dd ?
+ui.hwnd_main    dd ?
 
-    edit_class db "EDIT", 0
-    wste_class db "WSTE_Main", 0
+ui.edit_class db "EDIT", 0
+ui.wste_class db "WSTE_Main", 0
 
-    textbox_font_name db "Consolas", 0
+ui.textbox_font_name db "Consolas", 0
 
-    window_title db "World's Smallest Text Editor", 0
+ui.window_title db "World's Smallest Text Editor", 0
 
-    file_filters db "All Files", 0, "*.*", 0, 0
+ui.file_filters db "All Files", 0, "*.*", 0, 0
 
-wcx:
+ui.wcx:
     .cbSize        dd 48
     .style         dd 0
-    .lpfnWndProc   dd ui_window_proc
+    .lpfnWndProc   dd ui.window_proc
     .cbClsExtra    dd 0
     .cbWndExtra    dd 0
     .hInstance     dd 0
@@ -21,19 +21,19 @@ wcx:
     .hCursor       dd 0
     .hbrBackground dd COLOR_WINDOW+1
     .lpszMenuName  dd 0
-    .lpszClassName dd wste_class
+    .lpszClassName dd ui.wste_class
     .hIconSm       dd 0
 
-ofn:
+ui.ofn:
     .lStructSize       dd  88
     .hwndOwner         dd  NULL
     .hInstance         dd  NULL
-    .lpstrFilter       dd  file_filters
+    .lpstrFilter       dd  ui.file_filters
     .lpstrCustomFilter dd  NULL
     .nMaxCustFilter    dd  0
     .nFilterIndex      dd  1
-    .lpstrFile         dd  filename
-    .nMaxFile          dd  256
+    .lpstrFile         dd  ui.filename
+    .nMaxFile          dd  MAX_PATH
     .lpstrFileTitle    dd  NULL
     .nMaxFileTitle     dd  0
     .lpstrInitialDir   dd  NULL
@@ -49,7 +49,7 @@ ofn:
     .dwReserved        dd  0
     .FlagsEx           dd  0
 
-msg:
+ui.msg:
     .hwnd    dd ?
     .message dd ?
     .wParam  dd ?
@@ -57,10 +57,10 @@ msg:
     .time    dd ?
     .pt      dq ?
 
-rect:
+ui.rect:
     .left   dd ?
     .top    dd ?
     .right  dd ?
     .bottom dd ?
 
-    filename        rb 256
+ui.filename        rb MAX_PATH
