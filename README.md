@@ -1,6 +1,6 @@
-![](https://img.shields.io/github/license/philiparvidsson/Worlds-Smallest-Text-Editor.svg)
-
 <img align="right" src="img/screenshot.png" alt="" />
+
+![](https://img.shields.io/github/license/philiparvidsson/Worlds-Smallest-Text-Editor.svg)
 
 # What is this?
 
