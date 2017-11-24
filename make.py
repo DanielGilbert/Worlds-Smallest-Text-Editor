@@ -58,8 +58,12 @@ def main():
     if script_dir:
         os.chdir(script_dir)
 
-    if len(sys.argv) == 2 and sys.argv[1] == "run":
-        subprocess.call([r"bin\wste.exe"])
+    if len(sys.argv) == 2:
+        if sys.argv[1] == "clean":
+            if os.path.isdir(".fasm") : shutil.rmtree(".fasm")
+            if os.path.isdir("bin")   : shutil.rmtree("bin")
+        elif sys.argv[1] == "run":
+            subprocess.call([r"bin\wste.exe"])
         return
 
     if os.path.isfile(r"bin\wste.exe"):
