@@ -1,31 +1,31 @@
-ui_browse_for_file:
-    mov eax, [hwnd_main]
-    mov [ofn.hwndOwner], eax
-    push ofn
+ui.browse_for_file:
+    mov eax, [ui.hwnd_main]
+    mov [ui.ofn.hwndOwner], eax
+    push ui.ofn
     call [GetOpenFileName]
     push MB_OK
-    push filename
-    push filename
+    push ui.filename
+    push ui.filename
     push HWND_DESKTOP
     call [MessageBox]
     ret
 
-ui_create_textbox:
+ui.create_textbox:
     push NULL
-    push [wcx.hInstance]
+    push [ui.wcx.hInstance]
     push NULL
-    push [hwnd_main]
+    push [ui.hwnd_main]
     push CW_USEDEFAULT
     push CW_USEDEFAULT
     push CW_USEDEFAULT
     push CW_USEDEFAULT
     push ES_LEFT + ES_MULTILINE + ES_WANTRETURN + WS_VISIBLE + WS_CHILD + WS_HSCROLL + WS_VSCROLL
     push NULL
-    push edit_class
+    push ui.edit_class
     push WS_EX_LEFT
     call [CreateWindowEx]
-    mov [hwnd_textbox], eax
-    push textbox_font_name
+    mov [ui.hwnd_textbox], eax
+    push ui.textbox_font_name
     push DEFAULT_PITCH
     push DEFAULT_QUALITY
     push CLIP_DEFAULT_PRECIS
@@ -43,19 +43,19 @@ ui_create_textbox:
     push TRUE
     push eax
     push WM_SETFONT
-    push [hwnd_textbox]
+    push [ui.hwnd_textbox]
     call [SendMessage]
-    call ui_resize_textbox
+    call ui.resize_textbox
     ret
 
-ui_init:
+ui.init:
     push NULL
     call [GetModuleHandle]
-    mov [wcx.hInstance], eax
-    push wcx
+    mov [ui.wcx.hInstance], eax
+    push ui.wcx
     call [RegisterClassEx]
     push NULL
-    push [wcx.hInstance]
+    push [ui.wcx.hInstance]
     push NULL
     push HWND_DESKTOP
     push 480
@@ -63,44 +63,44 @@ ui_init:
     push CW_USEDEFAULT
     push CW_USEDEFAULT
     push WS_OVERLAPPEDWINDOW + WS_VISIBLE
-    push window_title
-    push wste_class
+    push ui.window_title
+    push ui.wste_class
     push WS_EX_LEFT
     call [CreateWindowEx]
-    mov [hwnd_main], eax
-    call ui_create_textbox
+    mov [ui.hwnd_main], eax
+    call ui.create_textbox
     ret
 
-ui_main:
+ui.main:
     push 0
     push 0
     push NULL
-    push msg
+    push ui.msg
     call [GetMessage]
     test eax, eax
     jz .end
-    push msg
+    push ui.msg
     call [TranslateMessage]
-    push msg
+    push ui.msg
     call [DispatchMessage]
-    jmp ui_main
+    jmp ui.main
 .end:
     ret
 
-ui_resize_textbox:
-    push rect
-    push [hwnd_main]
+ui.resize_textbox:
+    push ui.rect
+    push [ui.hwnd_main]
     call [GetClientRect]
     push TRUE
-    push [rect.bottom]
-    push [rect.right]
-    push [rect.top]
-    push [rect.left]
-    push [hwnd_textbox]
+    push [ui.rect.bottom]
+    push [ui.rect.right]
+    push [ui.rect.top]
+    push [ui.rect.left]
+    push [ui.hwnd_textbox]
     call [MoveWindow]
     ret
 
-ui_window_proc:
+ui.window_proc:
     pop ebp         ; ret addr
     pop eax         ; hWnd_main
     pop ebx         ; uMsg
@@ -115,7 +115,7 @@ ui_window_proc:
 .neq_wm_destroy:
     cmp ebx, WM_SIZE
     jne .neq_wm_size
-    call ui_resize_textbox
+    call ui.resize_textbox
 .neq_wm_size:
     push edx
     push ecx

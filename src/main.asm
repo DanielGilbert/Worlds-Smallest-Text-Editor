@@ -18,8 +18,8 @@ include "io.code.asm"
 include "ui.code.asm"
 
 WinMain:
-    call ui_init
-    call ui_main
+    call ui.init
+    call ui.main
 
     push 0
     call [ExitProcess]

@@ -3,7 +3,7 @@ io_load_file:
     pop edx
     push ebp
     push OF_READ
-    push re_open_buff
+    push NULL                   ; data struct
     push edx
     call [OpenFile]
     ret
