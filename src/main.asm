@@ -203,6 +203,7 @@ ui.window_proc:
     cmp ebx, WM_SIZE
     jne .neq_wm_size
     call ui.resize_textbox
+    jmp .end
 .neq_wm_size:
     push edx
     push ecx
