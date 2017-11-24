@@ -55,7 +55,8 @@ def fasm_assemble(filename):
 def main():
     script_dir, _ = ntpath.split(sys.argv[0])
 
-    os.chdir(script_dir)
+    if script_dir:
+        os.chdir(script_dir)
 
     if len(sys.argv) == 2 and sys.argv[1] == "run":
         subprocess.call([r"bin\wste.exe"])
