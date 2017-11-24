@@ -1,3 +1,5 @@
+<img align="right" src="img/screenshot.png" alt="" />
+
 ![](https://img.shields.io/github/license/philiparvidsson/Worlds-Smallest-Text-Editor.svg)
 
 # What is this?
@@ -5,8 +7,6 @@
 This is the world's smallest, fully functional text editor! Written in [x86 assembly language](https://en.wikipedia.org/wiki/X86_assembly_language) and compiled with [flat assembler](https://flatassembler.net/), the executable is only a few kilobytes in size!
 
 The program can load, save and edit text files just like [Notepad](https://en.wikipedia.org/wiki/Microsoft_Notepad). More features might be added later (e.g. syntax highlighting, program preferences etc.) if it can be done without affecting the size of the executable.
-
-<img align="right" src="img/screenshot.png" alt="" />
 
 ## How small is it?
 
