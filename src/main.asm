@@ -5,7 +5,7 @@ include 'win32w.inc'
 
 section '.text' code readable writeable executable
 
-io.load_file:
+read_file:
     pop ebp
     pop edx
     push ebp
@@ -20,54 +20,54 @@ io.load_file:
     cmp eax, INVALID_HANDLE_VALUE
     jne .open_ok
     push open_fail_msg
-    call ui.message_box
+    call message_box
     ret
 .open_ok:
-    mov [io.file_handle], eax
+    mov [file_handle], eax
     push NULL
-    push [io.file_handle]
+    push [file_handle]
     call [GetFileSize]
     inc eax
-    mov [io.file_size], eax
+    mov [file_size], eax
     call [GetProcessHeap]
-    mov [io.heap_handle], eax
-    push [io.file_size]
+    mov [heap_handle], eax
+    push [file_size]
     push HEAP_ZERO_MEMORY
     push eax
     call [HeapAlloc]
-    mov [io.file_data_ptr], eax
+    mov [file_data_ptr], eax
     push NULL
-    push io.num_bytes_read
-    push [io.file_size]
-    push [io.file_data_ptr]
-    push [io.file_handle]
+    push num_bytes_read
+    push [file_size]
+    push [file_data_ptr]
+    push [file_handle]
     call [ReadFile]
-    push [io.file_data_ptr]
-    push [ui.hwnd_textbox]
+    push [file_data_ptr]
+    push [hwnd_textbox]
     call [SetWindowText]
-    push [io.file_handle]
+    push [file_handle]
     call [CloseHandle]
-    push [io.file_data_ptr]
+    push [file_data_ptr]
     push 0
-    push [io.heap_handle]
+    push [heap_handle]
     call [HeapFree]
     ret
 
-io.save_file:
+write_file:
     call [GetProcessHeap]
-    mov [io.heap_handle], eax
-    push [ui.hwnd_textbox]
+    mov [heap_handle], eax
+    push [hwnd_textbox]
     call [GetWindowTextLength]
     inc eax                     ; make room for nullchar
-    mov [io.file_size], eax
-    push [io.file_size]
+    mov [file_size], eax
+    push [file_size]
     push HEAP_ZERO_MEMORY
-    push [io.heap_handle]
+    push [heap_handle]
     call [HeapAlloc]
-    mov [io.file_data_ptr], eax
-    push [io.file_size]
-    push [io.file_data_ptr]
-    push [ui.hwnd_textbox]
+    mov [file_data_ptr], eax
+    push [file_size]
+    push [file_data_ptr]
+    push [hwnd_textbox]
     call [GetWindowText]
     push NULL
     push FILE_ATTRIBUTE_NORMAL
@@ -75,72 +75,72 @@ io.save_file:
     push NULL
     push 0
     push GENERIC_WRITE
-    push ui.filename
+    push filename
     call [CreateFile]
-    mov [io.file_handle], eax
+    mov [file_handle], eax
     push NULL
-    push io.num_bytes_read
-    mov eax, [io.file_size]
+    push num_bytes_read
+    mov eax, [file_size]
     dec eax                     ; dont write nullchar
     push eax
-    push [io.file_data_ptr]
-    push [io.file_handle]
+    push [file_data_ptr]
+    push [file_handle]
     call [WriteFile]
-    push [io.file_handle]
+    push [file_handle]
     call [CloseHandle]
-    push [io.file_data_ptr]
+    push [file_data_ptr]
     push 0
-    push [io.heap_handle]
+    push [heap_handle]
     call [HeapFree]
     ret
 
-ui.open_file:
-    mov eax, [ui.hwnd_main]
-    mov [ui.ofn.hwndOwner], eax
-    push ui.ofn
+open_file:
+    mov eax, [hwnd_main]
+    mov [ofn.hwndOwner], eax
+    push ofn
     call [GetOpenFileName]
     test eax, eax
     jz .user_cancelled
-    push ui.filename
-    call io.load_file
-    push ui.filename
-    push [ui.hwnd_main]
+    push filename
+    call read_file
+    push filename
+    push [hwnd_main]
     call [SetWindowText]
 .user_cancelled:
     ret
 
-ui.save_file:
-    mov eax, [ui.hwnd_main]
-    mov [ui.ofn.hwndOwner], eax
-    push ui.ofn
+save_file:
+    mov eax, [hwnd_main]
+    mov [ofn.hwndOwner], eax
+    push ofn
     call [GetSaveFileName]
     test eax, eax
     jz .user_cancelled
-    call io.save_file
-    push ui.filename
-    push [ui.hwnd_main]
+    call write_file
+    push filename
+    push [hwnd_main]
     call [SetWindowText]
 .user_cancelled:
     ret
 
-ui.create_textbox:
+create_textbox:
     push NULL
-    push [ui.wcx.hInstance]
+    push [wcx.hInstance]
     push NULL
-    push [ui.hwnd_main]
+    push [hwnd_main]
     push CW_USEDEFAULT
     push CW_USEDEFAULT
     push CW_USEDEFAULT
     push CW_USEDEFAULT
     push ES_LEFT + ES_MULTILINE + ES_WANTRETURN + WS_VISIBLE + WS_CHILD + WS_HSCROLL + WS_VSCROLL
     push NULL
-    push ui.edit_class
+    push edit_class
     push WS_EX_LEFT
     call [CreateWindowEx]
-    mov [ui.hwnd_textbox], eax
+    mov [hwnd_textbox], eax
     push eax
     call [SetFocus]
-    push ui.textbox_font
+    push textbox_font
     push DEFAULT_PITCH
     push PROOF_QUALITY
     push CLIP_DEFAULT_PRECIS
@@ -158,12 +158,12 @@ ui.create_textbox:
     push TRUE
     push eax
     push WM_SETFONT
-    push [ui.hwnd_textbox]
+    push [hwnd_textbox]
     call [SendMessage]
-    call ui.resize_textbox
+    call resize_textbox
     ret
 
-ui.message_box:
+message_box:
     pop ebp
     pop edx
     push ebp
@@ -174,20 +174,20 @@ ui.message_box:
     call [MessageBox]
     ret
 
-ui.resize_textbox:
-    push ui.rect
-    push [ui.hwnd_main]
+resize_textbox:
+    push rect
+    push [hwnd_main]
     call [GetClientRect]
     push TRUE
-    push [ui.rect.bottom]
-    push [ui.rect.right]
-    push [ui.rect.top]
-    push [ui.rect.left]
-    push [ui.hwnd_textbox]
+    push [rect.bottom]
+    push [rect.right]
+    push [rect.top]
+    push [rect.left]
+    push [hwnd_textbox]
     call [MoveWindow]
     ret
 
-ui.window_proc:
+window_proc:
     pop ebp         ; ret addr
     pop eax         ; hWnd_main
     pop ebx         ; uMsg
@@ -202,7 +202,7 @@ ui.window_proc:
 .neq_wm_destroy:
     cmp ebx, WM_SIZE
     jne .neq_wm_size
-    call ui.resize_textbox
+    call resize_textbox
     jmp .end
 .neq_wm_size:
     push edx
@@ -216,11 +216,11 @@ ui.window_proc:
 main:
     push NULL
     call [GetModuleHandle]
-    mov [ui.wcx.hInstance], eax
-    push ui.wcx
+    mov [wcx.hInstance], eax
+    push wcx
     call [RegisterClassEx]
     push NULL
-    push [ui.wcx.hInstance]
+    push [wcx.hInstance]
     push NULL
     push HWND_DESKTOP
     push 480
@@ -228,72 +228,72 @@ main:
     push CW_USEDEFAULT
     push CW_USEDEFAULT
     push WS_OVERLAPPEDWINDOW + WS_VISIBLE
-    push ui.window_title
-    push ui.wste_class
+    push window_title
+    push wste_class
     push WS_EX_LEFT
     call [CreateWindowEx]
-    mov [ui.hwnd_main], eax
-    call ui.create_textbox
+    mov [hwnd_main], eax
+    call create_textbox
 message_loop:
     push 0
     push 0
     push NULL
-    push ui.msg
+    push msg
     call [GetMessage]
     test eax, eax
     jz .end
-    cmp [ui.msg.message], WM_KEYDOWN
+    cmp [msg.message], WM_KEYDOWN
     jne .neq_wm_keydown
     push VK_CONTROL
     call [GetKeyState]
     and ax, 10000000b
     test ax, ax
     jz .ctrl_not_pressed
-    cmp [ui.msg.wParam], 0x4f   ; O
+    cmp [msg.wParam], 0x4f   ; O
     jne .not_o_key
-    call ui.open_file
+    call open_file
     jmp message_loop
 .not_o_key:
-    cmp [ui.msg.wParam], 0x53   ; S
+    cmp [msg.wParam], 0x53   ; S
     jne .not_s_key
     push VK_SHIFT
     call [GetKeyState]
     and ax, 10000000b
     test ax, ax
     jnz .shift_pressed
-    cmp byte [ui.filename], 0
+    cmp byte [filename], 0
     jz .must_save_as
-    call io.save_file
+    call write_file
     jmp message_loop
 .must_save_as:
 .shift_pressed:
-    call ui.save_file
+    call save_file
     jmp message_loop
 .not_s_key:
 .ctrl_not_pressed:
 .neq_wm_keydown:
-    push ui.msg
+    push msg
     call [TranslateMessage]
-    push ui.msg
+    push msg
     call [DispatchMessage]
     jmp message_loop
 .end:
     push 0
     call [ExitProcess]
 
-io.file_data_ptr dd 0
-io.heap_handle   dd 0
-ui.edit_class    db 'EDIT', 0
-ui.wste_class    db 'WSTE_Main', 0
-ui.textbox_font  db 'Consolas', 0
-ui.window_title  db 'The World''s Smallest Text Editor!', 0
-ui.file_filters  db 'Any file (*.*)', 0, '*.*', 0, 0
+file_data_ptr dd 0
+heap_handle   dd 0
+edit_class    db 'EDIT', 0
+wste_class    db 'WSTE_Main', 0
+textbox_font  db 'Consolas', 0
+window_title  db 'The World''s Smallest Text Editor!', 0
+file_filters  db 'Any file (*.*)', 0, '*.*', 0, 0
 open_fail_msg db 'Could not open file.', 0
 
-ui.wcx:
+wcx:
     .cbSize        dd 48
     .style         dd 0
-    .lpfnWndProc   dd ui.window_proc
+    .lpfnWndProc   dd window_proc
     .cbClsExtra    dd 0
     .cbWndExtra    dd 0
     .hInstance     dd 0
@@ -301,18 +301,18 @@ ui.wcx:
     .hCursor       dd 0
     .hbrBackground dd COLOR_WINDOW+1
     .lpszMenuName  dd 0
-    .lpszClassName dd ui.wste_class
+    .lpszClassName dd wste_class
     .hIconSm       dd 0
 
-ui.ofn:
+ofn:
     .lStructSize       dd 88
     .hwndOwner         dd NULL
     .hInstance         dd NULL
-    .lpstrFilter       dd ui.file_filters
+    .lpstrFilter       dd file_filters
     .lpstrCustomFilter dd NULL
     .nMaxCustFilter    dd 0
     .nFilterIndex      dd 1
-    .lpstrFile         dd ui.filename
+    .lpstrFile         dd filename
     .nMaxFile          dd MAX_PATH
     .lpstrFileTitle    dd NULL
     .nMaxFileTitle     dd 0
@@ -329,7 +329,7 @@ ui.ofn:
     .dwReserved        dd 0
     .FlagsEx           dd 0
 
-ui.msg:
+msg:
     .hwnd    dd ?
     .message dd ?
     .wParam  dd ?
@@ -337,18 +337,18 @@ ui.msg:
     .time    dd ?
     .pt      dq ?
 
-ui.rect:
+rect:
     .left   dd ?
     .top    dd ?
     .right  dd ?
     .bottom dd ?
 
-io.file_handle     dd ?
-io.file_size       dd ?
-io.num_bytes_read  dd ?
-ui.hwnd_textbox    dd ?
-ui.hwnd_main       dd ?
-ui.filename        rb MAX_PATH
+file_handle     dd ?
+file_size       dd ?
+num_bytes_read  dd ?
+hwnd_textbox    dd ?
+hwnd_main       dd ?
+filename        rb MAX_PATH
 
 section '.idata' import data readable
 
