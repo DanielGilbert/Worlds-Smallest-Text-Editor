@@ -18,7 +18,7 @@ The editor is intentionally kept very simple, but there are a few keyboard short
 ### Keyboard shortcuts
 | Key combination  | Command      |
 | ---------------- | ------------ |
-| Ctrl + L         | Open...      |
+| Ctrl + O         | Open...      |
 | Ctrl + S         | Save         |
 | Ctrl + Shift + S | Save as...   |
 
