@@ -15,8 +15,9 @@ Using the included make-script (which uses [fasm](https://flatassembler.net/) fo
 ## Building and running
 
 ### Prerequisites
+* [flat assembler](https://flatassembler.net/) — *An assembler for x86 processors. It supports Intel-style assembly language on the IA-32 and x86-64 computer architectures.*
 * [Python 3](https://www.python.org/downloads/) — *A widely used high-level programming language for general-purpose programming, created by Guido van Rossum and first released in 1991.*
-* [Windows 10](https://www.microsoft.com/en-us/windows/) — *A personal computer operating system developed and released by Microsoft as part of the Windows NT family of operating systems.*
+* [Windows 7+](https://www.microsoft.com/en-us/windows/) — *A personal computer operating system developed and released by Microsoft as part of the Windows NT family of operating systems.*
 
 ### Instructions
 1. Clone this repository: `git clone https://github.com/philiparvidsson/Worlds-Smallest-Text-Editor`
