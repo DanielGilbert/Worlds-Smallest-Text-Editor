@@ -90,7 +90,7 @@ read_file:
 .open_ok:
     mov [file_handle], eax
     push NULL
-    push [file_handle]
+    push eax
     call [GetFileSize]
     inc eax
     mov [file_size], eax
@@ -142,6 +142,12 @@ write_file:
     push GENERIC_WRITE
     push filename
     call [CreateFile]
+    cmp eax, INVALID_HANDLE_VALUE
+    jne .open_ok
+    push save_fail_msg
+    call message_box
+    ret
+.open_ok:
     mov [file_handle], eax
     push NULL
     push num_bytes_read
@@ -285,6 +291,7 @@ textbox_font  db 'Consolas', 0
 window_title  db 'The World''s Smallest Text Editor!', 0
 file_filters  db 'Any file (*.*)', 0, '*.*', 0, 0
 open_fail_msg db 'Could not open file.', 0
+save_fail_msg db 'Could not save file.', 0
 
 wcx:
     .cbSize        dd 48
