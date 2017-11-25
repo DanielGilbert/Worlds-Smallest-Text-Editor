@@ -264,13 +264,13 @@ window_proc:
     pop ecx         ; wParan
     pop edx         ; lParam
     push ebp        ; restore ret addr to not crash on ret
-    cmp ebx, WM_DESTROY
+    cmp bl, WM_DESTROY
     jne .neq_wm_destroy
     push 0
     call [PostQuitMessage]
     jmp .end
 .neq_wm_destroy:
-    cmp ebx, WM_SIZE
+    cmp bl, WM_SIZE
     jne .neq_wm_size
     call resize_textbox
     jmp .end
