@@ -84,7 +84,7 @@ read_file:
     call [CreateFile]
     cmp eax, INVALID_HANDLE_VALUE
     jne .open_ok
-    push open_fail_msg
+    push error_msg
     call message_box
     ret
 .open_ok:
@@ -144,7 +144,7 @@ write_file:
     call [CreateFile]
     cmp eax, INVALID_HANDLE_VALUE
     jne .open_ok
-    push save_fail_msg
+    push error_msg
     call message_box
     ret
 .open_ok:
@@ -283,15 +283,12 @@ window_proc:
 .end:
     ret
 
-file_data_ptr dd 0
-heap_handle   dd 0
 edit_class    db 'EDIT', 0
 wste_class    db 'WSTE_Main', 0
 textbox_font  db 'Consolas', 0
 window_title  db 'The World''s Smallest Text Editor!', 0
 file_filters  db 'Any file (*.*)', 0, '*.*', 0, 0
-open_fail_msg db 'Could not open file.', 0
-save_fail_msg db 'Could not save file.', 0
+error_msg     db 'Error.', 0
 
 wcx:
     .cbSize        dd 48
@@ -346,6 +343,8 @@ rect:
     .right  dd ?
     .bottom dd ?
 
+file_data_ptr   dd ?
+heap_handle     dd ?
 file_handle     dd ?
 file_size       dd ?
 num_bytes_read  dd ?
