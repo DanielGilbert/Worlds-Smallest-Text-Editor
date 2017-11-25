@@ -297,7 +297,7 @@ window_proc:
 .end:
     ret
 
-print 'code size (bytes): ', $-main
+print 'code (bytes): ', $-main
 
 edit_class    db 'EDIT', 0
 wste_class    db 'WSTE_Main', 0
@@ -345,8 +345,8 @@ ofn:
     .dwReserved        dd 0
     .FlagsEx           dd 0
 
-print 'data size (bytes): ', $-edit_class
-print 'total size (bytes): ', $-main
+print 'data (bytes): ', $-edit_class
+print 'total (bytes): ', $-main
 
 msg:
     .hwnd    dd ?
