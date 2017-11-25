@@ -25,10 +25,14 @@ main:
     mov [wcx.hInstance], eax
     push wcx
     call [RegisterClassEx]
-    push NULL
+    xor edx, edx
+    ;push NULL
+    push edx
     push [wcx.hInstance]
-    push NULL
-    push HWND_DESKTOP
+    ;push NULL
+    push edx
+    ;push HWND_DESKTOP
+    push edx
     push 480
     push 640
     push CW_USEDEFAULT
@@ -36,7 +40,8 @@ main:
     push WS_OVERLAPPEDWINDOW + WS_VISIBLE
     push window_title
     push wste_class
-    push WS_EX_LEFT
+    ;push WS_EX_LEFT
+    push edx
     call [CreateWindowEx]
     mov [hwnd_main], eax
     call create_textbox
@@ -55,12 +60,13 @@ message_loop:
     and ah, 1000b
     test ah, ah
     jz .ctrl_not_pressed
-    cmp [msg.wParam], 0x4f   ; O
+    mov edx, msg.wParam
+    cmp byte [edx], 0x4f   ; O
     jne .not_o_key
     call open_file
     jmp message_loop
 .not_o_key:
-    cmp [msg.wParam], 0x53   ; S
+    cmp byte [edx], 0x53   ; S
     jne .not_s_key
     push VK_SHIFT
     call [GetKeyState]
@@ -98,8 +104,7 @@ read_file:
     call [CreateFile]
     cmp eax, INVALID_HANDLE_VALUE
     jne .open_ok
-    push error_msg
-    call message_box
+    call error_msgbox
     ret
 .open_ok:
     mov [file_handle], eax
@@ -158,8 +163,7 @@ write_file:
     call [CreateFile]
     cmp eax, INVALID_HANDLE_VALUE
     jne .open_ok
-    push error_msg
-    call message_box
+    call error_msgbox
     ret
 .open_ok:
     mov [file_handle], eax
@@ -230,13 +234,21 @@ create_textbox:
     push CLIP_DEFAULT_PRECIS
     push OUT_DEFAULT_PRECIS
     push ANSI_CHARSET
-    push FALSE
-    push FALSE
-    push FALSE
-    push FW_NORMAL
+
+    xor ecx, ecx
+    mov cl, 7
+@@:
     push 0
-    push 0
-    push 0
+    loop @r
+
+    ;push FALSE
+    ;push FALSE
+    ;push FALSE
+    ;push FW_DONTCARE
+    ;push 0
+    ;push 0
+    ;push 0
+
     push 14
     call [CreateFont]
     push TRUE
@@ -247,13 +259,10 @@ create_textbox:
     call resize_textbox
     ret
 
-message_box:
-    pop ebp
-    pop edx
-    push ebp
+error_msgbox:
     push MB_OK
-    push edx
-    push edx
+    push error_msg
+    push error_msg
     push HWND_DESKTOP
     call [MessageBox]
     ret
@@ -263,10 +272,11 @@ resize_textbox:
     push [hwnd_main]
     call [GetClientRect]
     push TRUE
-    push [rect.bottom]
-    push [rect.right]
-    push [rect.top]
-    push [rect.left]
+    mov ebx, rect
+    push dword [ebx+12]
+    push dword [ebx+8]
+    push dword [ebx+4]
+    push dword [ebx]
     push [hwnd_textbox]
     call [MoveWindow]
     ret
