@@ -3,6 +3,20 @@ entry main
 
 include 'win32w.inc'
 
+macro print description,number
+{
+   display description
+   value=number
+   pos=1000
+   repeat 4
+      digit=value/pos
+      value=value-(digit*pos)
+      pos=pos/10
+      display ('0'+digit)
+   end repeat
+   display $d,$a
+}
+
 section '.text' code readable writeable executable
 
 main:
@@ -283,6 +297,8 @@ window_proc:
 .end:
     ret
 
+print 'code size (bytes): ', $-main
+
 edit_class    db 'EDIT', 0
 wste_class    db 'WSTE_Main', 0
 textbox_font  db 'Consolas', 0
@@ -328,6 +344,9 @@ ofn:
     .lpReserved        dd NULL
     .dwReserved        dd 0
     .FlagsEx           dd 0
+
+print 'data size (bytes): ', $-edit_class
+print 'total size (bytes): ', $-main
 
 msg:
     .hwnd    dd ?
