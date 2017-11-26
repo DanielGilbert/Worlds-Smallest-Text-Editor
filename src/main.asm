@@ -275,7 +275,7 @@ resize_textbox:
     mov ebx, rect
     push dword [ebx+12]
     push dword [ebx+8]
-    push dword [ebx+4]
+    push dword [ebx] ; save 1 byte by pushing ebx instead of ebx+4 (both are 0)
     push dword [ebx]
     push [hwnd_textbox]
     call [MoveWindow]
